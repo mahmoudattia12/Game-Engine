@@ -5,12 +5,16 @@ def initialCheckersGrid(): Array[Array[String]] = {
     val isEven = (a: Int) => a % 2 == 0
     (isEven(x) && isEven(y)) || (!isEven(x) && !isEven(y))
   }
-  //🔴//🔵
+  //🔴//🔵//🔴
   val temp: Array[Array[String]] = Array.ofDim[String](8, 8)
-  (0 to 7).flatMap { row =>
+  (0 to 2).flatMap { row =>
     (0 to 7).map { col =>
-      if (row != 3 && row != 4)
-        if (!isSame(row, col)) temp(row)(col) = "\uD83D\uDD34"
+      if (!isSame(row, col)) temp(row)(col) = "1"
+    }
+  }
+  (5 to 7).flatMap { row =>
+    (0 to 7).map { col =>
+      if (!isSame(row, col)) temp(row)(col) = "2"
     }
   }
   return temp
