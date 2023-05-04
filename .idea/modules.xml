@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Programming-Paradigms.iml" filepath="$PROJECT_DIR$/.idea/modules/Programming-Paradigms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Programming-Paradigms-build.iml" filepath="$PROJECT_DIR$/.idea/modules/Programming-Paradigms-build.iml" />
+    </modules>
+  </component>
+</project>
