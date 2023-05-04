@@ -21,10 +21,18 @@ def sudokuDrawer(currState: Array[Array[String]]): Unit = {
       setFont(new Font("Arial", Font.BOLD, 20))
       setHorizontalAlignment(SwingConstants.CENTER)
       setVerticalAlignment(SwingConstants.CENTER)
-      setForeground(new Color(114, 108, 108))
+
       setBorder(BorderFactory.createLineBorder(Color.black))
       setBackground(Color.white)
-      setText(currState(row)(col))
+//      if(currState(row)(col) != null)
+      if(currState(row)(col) != null && currState(row)(col)(0) == '0'){
+        setText(currState(row)(col)(1).toString)
+        setForeground(Color.black)
+      }
+      else {
+        setText(currState(row)(col))
+        setForeground(Color.blue)
+      }
       setOpaque(true)
     }
   }
@@ -82,8 +90,8 @@ def sudokuController(currState: (Array[Array[String]], Boolean), input: String):
     str.split("\\s+")
   }
   val inputArr = splitString(input)
-  val cellInput = inputArr(0)
-  val value = inputArr(1)
+//  val cellInput = inputArr(0)
+//  val value = inputArr(1)
   def getCol(c: Char): Int = {
     c match {
       case 'a' => 0
@@ -108,13 +116,14 @@ def sudokuController(currState: (Array[Array[String]], Boolean), input: String):
     }
   }
 
-  val rephrase = (str: String) => (getRow(str(0)), getCol(str(1)))
+  val rephrase = (str: String) => if(str.length == 2) (getRow(str(0)), getCol(str(1))) else (-1,-1)
+
 
   //x = index._1/3 * 3, y = index._2/3 *3
   def validateBlock(x: Int, y: Int, cell: String): Boolean = {
     (x until x + 3).flatMap { row =>
       (y until y + 3).map { col =>
-        if (currState._1(row)(col) == value) return false
+        if (currState._1(row)(col) == inputArr(1)) return false
       }
     }
     true
@@ -122,14 +131,14 @@ def sudokuController(currState: (Array[Array[String]], Boolean), input: String):
 
   def validateRow(index: (Int, Int), cell: String): Boolean = {
     LazyList.from(0).takeWhile { case (j) => j <= 8 }.foreach { case (j) =>
-      if (currState._1(index._1)(j) == value) return false
+      if (currState._1(index._1)(j) == inputArr(1)) return false
     }
     true
   }
 
   def validateCol(index: (Int, Int), cell: String): Boolean = {
     LazyList.from(0).takeWhile { case (i) => i <= 8 }.foreach { case (i) =>
-      if (currState._1(i)(index._2) == value) return false
+      if (currState._1(i)(index._2) == inputArr(1)) return false
     }
     true
   }
@@ -149,15 +158,34 @@ def sudokuController(currState: (Array[Array[String]], Boolean), input: String):
       true
     } else false
   }
+  def removeCell(index:(Int,Int)): Boolean = {
+    if(currState._1(index._1)(index._2) != null && currState._1(index._1)(index._2)(0) != '0'){
+      currState._1(index._1)(index._2) = null;
+      true
+    }else false
+  }
 
-
-  val isBetweenOneAndNine = (str: String) => str.length == 1 && str.charAt(0).isDigit && str.charAt(0) >= '1' && str.charAt(0) <= '9'
-  if (isBetweenOneAndNine(value)) {
-    val cell = rephrase(cellInput)
-    cell match {
-      case (-1, -1) => (false, currState._1)
-      case _ =>
-        (setCell(cell, value), currState._1)
+  if(inputArr.length == 2){
+    if (inputArr(0) == "remove") {
+      val cell = rephrase(inputArr(1))
+      cell match {
+        case (-1, -1) => (false, currState._1)
+        case _ =>
+          (removeCell(cell), currState._1)
+      }
+    } else {
+      val isBetweenOneAndNine = (str: String) => str.length == 1 && str.charAt(0).isDigit && str.charAt(0) >= '1' && str.charAt(0) <= '9'
+      if (isBetweenOneAndNine(inputArr(1))) {
+        val cell = rephrase(inputArr(0))
+        cell match {
+          case (-1, _) => (false, currState._1)
+          case (_, -1) => (false, currState._1)
+          case _ =>
+            (setCell(cell, inputArr(1)), currState._1)
+        }
+      } else (false, currState._1)
     }
-  } else (false, currState._1)
+  }else (false, currState._1)
+
+
 }

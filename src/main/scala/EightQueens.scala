@@ -106,7 +106,7 @@ def eightQueensController(currState: (Array[Array[String]], Boolean), input: Str
     }
   }
 
-  val rephrase = (str: String) => (getRow(str(0)), getCol(str(1)))
+  val rephrase = (str: String) => if(str.length == 2) (getRow(str(0)), getCol(str(1))) else (-1,-1)
 
   def ValidateUpLeft(index: (Int, Int)): Boolean = {
     LazyList.from(index._1 - 1, -1).zip(LazyList.from(index._2 - 1, -1)).takeWhile { case (i, j) => i >= 0 && j >= 0 }.foreach { case (i, j) =>

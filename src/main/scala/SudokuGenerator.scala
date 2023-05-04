@@ -11,7 +11,7 @@ def remove(a: Array[Array[Int]], count: Int):Array[Array[Int]] = {
 def intArrayToStringArray(arr: Array[Array[Int]]): Array[Array[String]] = {
   arr.map(_.map {
     case 0 => null
-    case n => n.toString
+    case n => "0" + n.toString
   })
 }
 
