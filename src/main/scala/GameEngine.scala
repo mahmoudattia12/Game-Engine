@@ -5,7 +5,7 @@ def gameEngine(controller: ((Array[Array[String]], Boolean), String) => (Boolean
   //draw initial grid
   drawer(gameGrid)
   while (true) {
-    //      if (turn1) println("player 1") else println("player 2")
+    if (turn1) println("player 1") else println("player 2")
     scala.Predef.print("Enter your input (separated by spaces if multiple): ")
     val input = scala.io.StdIn.readLine();
     val res = controller((gameGrid, turn1), input)

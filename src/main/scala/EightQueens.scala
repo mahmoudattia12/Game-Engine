@@ -72,6 +72,11 @@ def eightQueensDrawer(currState: Array[Array[String]]): Unit = {
   createMainFrame(createLabel("Welcome to 8 Queens!"), createGamePanel())
 }
 def eightQueensController(currState: (Array[Array[String]], Boolean), input: String): (Boolean, Array[Array[String]]) = {
+  def splitString(str: String): Array[String] = {
+    str.split("\\s+")
+  }
+  val inputArr = splitString(input)
+
   //function to rephrase input
   def getCol(c: Char): Int = {
     c match {
@@ -163,10 +168,28 @@ def eightQueensController(currState: (Array[Array[String]], Boolean), input: Str
     } else false
   }
 
-  rephrase(input) match {
-    case (_, -1) => (false, currState._1)
-    case (-1, _) => (false, currState._1)
-    case _ =>
-      (setCell(rephrase(input)), currState._1)
+  def removeCell(index: (Int, Int)): Boolean = {
+    if(currState._1(index._1)(index._2) == "♛"){
+      currState._1(index._1)(index._2) = null; true
+    }else
+      false
   }
+  if(inputArr(0) == "remove"){
+    val cell = rephrase(inputArr(1))
+    cell match {
+      case (_, -1) => (false, currState._1)
+      case (-1, _) => (false, currState._1)
+      case _ =>
+        (removeCell(cell), currState._1)
+    }
+  }else{
+    val cell = rephrase(input)
+    cell match {
+      case (_, -1) => (false, currState._1)
+      case (-1, _) => (false, currState._1)
+      case _ =>
+        (setCell(cell), currState._1)
+    }
+  }
+
 }
