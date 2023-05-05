@@ -132,6 +132,7 @@ def checkersController(currState: (Array[Array[String]], Boolean), input: String
     val (row, col) = pos
     row >= 0 && row < currState._1.length && col >= 0 && col < currState._1(0).length
   }
+  
   def checkForJmp(i: Int, j: Int, currentTurn: Int): String = {
     if (currentTurn == 1) {
       val rightChild = (i + 1, j + 1)
