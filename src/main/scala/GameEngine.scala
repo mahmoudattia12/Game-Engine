@@ -1,7 +1,7 @@
 def gameEngine(controller: ((Array[Array[String]], Boolean), String) => (Boolean, Array[Array[String]])
                , drawer: (Array[Array[String]]) => (Unit), grid : Array[Array[String]]) = {
   var gameGrid: Array[Array[String]] = grid
-  var turn1: Boolean = true;
+  var turn1: Boolean = true
   //draw initial grid
   drawer(gameGrid)
   while (true) {

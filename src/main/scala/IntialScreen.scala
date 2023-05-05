@@ -40,14 +40,14 @@ def start() = {
       gameEngine(checkersController, checkersDrawers, initialCheckersGrid())
     case "2" =>
       val grid: Array[Array[String]] = 
-        Array(Array("♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"),
-        Array("♟", "♟", "♟", "♟", "♟", "♟", "♟", "♟"),
+        Array(Array("2♜", "2♞", "2♝", "2♛", "2♚", "2♝", "2♞", "2♜"),
+        Array("2♟", "2♟", "2♟", "2♟", "2♟", "2♟", "2♟", "2♟"),
         Array("", "", "", "", "", "", "", ""),
         Array("", "", "", "", "", "", "", ""),
         Array("", "", "", "", "", "", "", ""),
         Array("", "", "", "", "", "", "", ""),
-        Array("♟", "♟", "♟", "♟", "♟", "♟", "♟", "♟"),
-        Array("♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"))
+        Array("1♟", "1♟", "1♟", "1♟", "1♟", "1♟", "1♟", "1♟"),
+        Array("1♜", "1♞", "1♝", "1♛", "1♚", "1♝", "1♞", "1♜"))
       gameEngine(chessController, chessDrawer, grid)
     case "3" =>
       gameEngine(ticTacToeController, ticTacToeDrawer, Array.ofDim[String](3, 3))
