@@ -169,7 +169,6 @@ def checkersController(currState: (Array[Array[String]], Boolean), input: String
     }
   }
 
-
   @tailrec
   def jmpRecursively(i: Int, j: Int, turn: Int): Unit = {
     if (!isWithin((i, j))) return
@@ -214,62 +213,31 @@ def checkersController(currState: (Array[Array[String]], Boolean), input: String
     }
   }
 
-
-
-
-
-
-
-
-  //  def isValid(from: (Int, Int), to: (Int,Int)): Boolean = {
-//    true
-//  }
-
-  //function to validate and set the cell in the currState
-  def setCell(index: (Int, Int)): Boolean = {
-    true
-  }
-
   if(inputArr.length == 2){
     val from = rephrase(inputArr(0))
     val to = rephrase(inputArr(1))
 
     (from, to) match {
-      case ((-1, _),(_,_)) =>
-        println("input arr err")
-        (false, currState._1)
-      case ((_, -1),(_,_)) =>         println("input arr err")
-
-        (false, currState._1)
-      case ((_, _),(-1,_)) =>         println("input arr err")
-
-        (false, currState._1)
-      case ((_, _),(_,-1)) =>         println("input arr err")
-
-        (false, currState._1)
+      case ((-1, _),(_,_)) => (false, currState._1)
+      case ((_, -1),(_,_)) =>  (false, currState._1)
+      case ((_, _),(-1,_)) =>  (false, currState._1)
+      case ((_, _),(_,-1)) =>  (false, currState._1)
       case _ =>
         val moveStatus: String = if (currState._2) validate(1, from._1, from._2, to._1, to._2)
                                 else validate(2, from._1, from._2, to._1, to._2)
         if(moveStatus == "not valid"){
-          println("moveStatus == not valid")
-
           (false, currState._1)
         }else if(moveStatus == "check for jmp"){
           val check = if (currState._2) checkForJmp(from._1, from._2, 1)
                       else checkForJmp(from._1, from._2, 2)
-          println("check" + check)
           if(check == null){
             return (false,currState._1)
           }
-
           if(currState._2){
-            println("1t")
             jmpRecursively(from._1, from._2, 1)
           }  else {
-            println("t2")
             jmpRecursively(from._1, from._2, 2)
           }
-          println("moveStatus == check for jmp")
           currState._1.foreach(row => {
             row.foreach(element => scala.Predef.print(s"$element "))
             println()
@@ -279,16 +247,10 @@ def checkersController(currState: (Array[Array[String]], Boolean), input: String
           currState._1(from._1)(from._2) =  null
           if(currState._2) currState._1(to._1)(to._2) = "1"
           else currState._1(to._1)(to._2) = "2"
-          println("moveStatus == else")
-
           (true, currState._1)
         }
-//        (setCell(rephrase(input)), currState._1)
-
     }
-  }else
-    println("input length")
-    (false,currState._1)
+  }else (false,currState._1)
 
 }
 
