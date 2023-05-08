@@ -3,20 +3,6 @@ import javax.swing.*
 import scala.annotation.tailrec
 
 def chessDrawer(currState: Array[Array[String]]): Unit = {
-  def createLabel(text: String): JLabel = {
-    new JLabel(text) {
-      setFont(new Font("MV Boli", Font.PLAIN, 20))
-      setVerticalTextPosition(SwingConstants.CENTER)
-      setHorizontalTextPosition(SwingConstants.CENTER)
-      setVerticalAlignment(SwingConstants.CENTER)
-      setHorizontalAlignment(SwingConstants.CENTER)
-      setOpaque(true)
-      setForeground(Color.white)
-      setBackground(new Color(20, 55, 143))
-      setBounds(600, 20, 300, 30)
-    }
-  }
-
   def createCellLabel(colorB: Color, colorF: Color, row: Int, col: Int): JLabel = {
     new JLabel() {
       setFont(new Font("Noto Color Emoji", Font.PLAIN, 40))
@@ -28,148 +14,39 @@ def chessDrawer(currState: Array[Array[String]]): Unit = {
       setOpaque(true)
     }
   }
-
-  val isSame = (x: Int, y: Int) => {
-    val isEven = (a: Int) => a % 2 == 0
-    (isEven(x) && isEven(y)) || (!isEven(x) && !isEven(y))
-  }
-
-  def createRowPanelReference(): JPanel = {
-    val rowPanel = new JPanel(new GridLayout(8, 1)) {
-      setPreferredSize(new Dimension(40, 300))
-      setBackground(new Color(168, 76, 162))
-    }
-    for (row <- 1 to 8) {
-      val label = createLabel((9 - row).toString)
-      label.setForeground(new Color(239, 196, 67))
-      label.setBackground(new Color(168, 76, 162))
-      label.setHorizontalAlignment(SwingConstants.CENTER)
-      rowPanel.add(label)
-    }
-    rowPanel
-  }
-
-  def createColPanelReference(): JPanel = {
-    val colPanel = new JPanel(new GridLayout(1, 9)) {
-      setPreferredSize(new Dimension(400, 50))
-      setBackground(new Color(168, 76, 162))
-    }
-    for (col <- Array(" ", "a ", "b", "c", "d", "e", "f", "g", "h")) {
-      val label = createLabel(col)
-      label.setBackground(new Color(168, 76, 162))
-      label.setForeground(new Color(239, 196, 67))
-      label.setVerticalAlignment(SwingConstants.NORTH)
-      label.setHorizontalAlignment(SwingConstants.CENTER)
-      colPanel.add(label)
-    }
-    colPanel
-  }
-
   def createGamePanel(): JPanel = {
     val gamePanel = new JPanel(new GridLayout(8, 8)) {
-      for {
-        row <- 0 until 8
-        col <- 0 until 8
-      } {
-        val foreColor: Color = if (currState(row)(col) != "" && currState(row)(col)(0) == '2') Color.black else new Color(221, 224, 226)
-
-        if (isSame(row, col)) {
-          add(createCellLabel(new Color(225, 210, 156), foreColor, row, col))
-        } else {
-          add(createCellLabel(new Color(119, 149, 86), foreColor, row, col))
+      (0 until 8).flatMap { row =>
+        (0 until 8).map { col =>
+          val foreColor: Color = if (currState(row)(col) != "" && currState(row)(col)(0) == '2') Color.black else new Color(221, 224, 226)
+          if (isSame(row, col)) {
+            add(createCellLabel(new Color(225, 210, 156), foreColor, row, col))
+          } else {
+            add(createCellLabel(new Color(119, 149, 86), foreColor, row, col))
+          }
         }
       }
       setBorder(BorderFactory.createLineBorder(Color.BLACK, 3))
     }
     val collectingPanel = new JPanel(new BorderLayout()) {
-      add(createRowPanelReference(), BorderLayout.WEST)
+      add(createRowPanelReference(8, 40), BorderLayout.WEST)
       add(gamePanel, BorderLayout.CENTER)
-      add(createColPanelReference(), BorderLayout.SOUTH)
+      add(createColPanelReference(9, 400, 50, Array(" ", "a ", "b", "c", "d", "e", "f", "g", "h")), BorderLayout.SOUTH)
       setBounds(530, 100, 400, 400)
     }
     collectingPanel
   }
-
-  def createMainFrame(welcomeLabel: JLabel, buttonPanel: JPanel) = {
-    val mainPanel = new JPanel(new BorderLayout()) {
-      setBackground(new Color(168, 76, 162))
-      add(welcomeLabel, BorderLayout.NORTH)
-      add(buttonPanel, BorderLayout.CENTER)
-      setLayout(null)
-    }
-    new JFrame("Chess") {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      setLocation(-10,0)
-      setPreferredSize(new Dimension(Integer.MAX_VALUE, 600))
-      add(mainPanel)
-      pack()
-      setVisible(true)
-      setAlwaysOnTop(true)
-    }
-  }
-
-  def updateFrame(welcomeLabel: JLabel, buttonPanel: JPanel) = {
-    val mainPanel = new JPanel(new BorderLayout()) {
-      setBackground(new Color(168, 76, 162))
-      add(welcomeLabel, BorderLayout.NORTH)
-      add(buttonPanel, BorderLayout.CENTER)
-      setLayout(null)
-    }
-    val f = getMainFrame("Chess")
-    f.add(mainPanel)
-    f.pack()
-    f.setVisible(true)
-  }
-
-  def getMainFrame(title: String): JFrame = {
-    val windows: Array[Window] = Window.getWindows
-    var frame: JFrame = null
-    for (w <- windows) {
-      w match {
-        case f: javax.swing.JFrame if f.getTitle == title => frame = f
-        case _ =>
-      }
-    }
-    if (frame != null) frame.getContentPane.removeAll()
-    frame
-  }
-
   if (getMainFrame("Chess") == null) {
-    createMainFrame(createLabel("Welcome to  Chess!"), createGamePanel())
+    createMainFrame(createLabel("Welcome to  Chess!"), createGamePanel(), "Chess")
   }
   else {
-    updateFrame(createLabel("Welcome to  Chess!"), createGamePanel())
+    updateFrame(createLabel("Welcome to  Chess!"), createGamePanel(), "Chess")
   }
 }
 def chessController(currState: (Array[Array[String]], Boolean) , input: String): (Boolean, Array[Array[String]]) = {
   val playerTurn : Int = if(currState._2) 1 else 2
-  def splitString(str: String): Array[String] = {
-    str.split("\\s+")
-  }
   val inputArr = splitString(input)
-  //function to rephrase input
-  def getCol(c: Char): Int = {
-    c match {
-      case 'a' => 0
-      case 'b' => 1
-      case 'c' => 2
-      case 'd' => 3
-      case 'e' => 4
-      case 'f' => 5
-      case 'g' => 6
-      case 'h' => 7
-      case _ => -1
-    }
-  }
-  def getRow(c: Char): Int = {
-    val isWithinRange = (value: Int, min: Int, max: Int) => value >= min && value <= max
-    val row: Int = 8 - (c.toInt - '0'.toInt)
-    isWithinRange(row, 0, 7) match {
-      case true => row
-      case _ => -1
-    }
-  }
-  val rephrase = (str: String) => if (str.length == 2) (getRow(str(0)), getCol(str(1))) else (-1, -1)
+
   //validate pieces
   def pawnCanMove(from: (Int, Int), to: (Int, Int)):Boolean = {
     val direction: Int = if(!currState._2) 1 else -1
@@ -181,17 +58,14 @@ def chessController(currState: (Array[Array[String]], Boolean) , input: String):
     }else if (from._1 + direction == to._1 && Math.abs(from._2 - to._2) == 1 && currState._1(to._1)(to._2) != "") true
     else false
   }
-
   def kingCanMove(from:(Int,Int), to:(Int,Int)): Boolean = {
     if (Math.abs(from._1 - to._1) <= 1 && Math.abs(from._2 - to._2) <= 1) return true else false
   }
-
   def knightCanMove(from:(Int, Int), to:(Int,Int)): Boolean = {
     if ((Math.abs(from._1 - to._1) == 2 && Math.abs(from._2 - to._2) == 1) ||
       (Math.abs(from._1 - to._1) == 1 && Math.abs(from._2 - to._2) == 2)) return true
     else false
   }
-
   //used in validate queen&rock&bishop
   def checkDiagonalObstruction(fromR: Int, fromC: Int, toR: Int, toC: Int): Boolean = {
     val rowDir = if (toR > fromR) 1 else -1
@@ -212,7 +86,6 @@ def chessController(currState: (Array[Array[String]], Boolean) , input: String):
     val i = Iterator.from(fromR + rowDir, rowDir)
     !i.takeWhile(_ != toR).exists(r => currState._1(r)(toC) != "")
   }
-
   def queenCanMove(from:(Int,Int), to:(Int,Int)): Boolean = {
     if (Math.abs(from._1 - to._1) == Math.abs(from._2 - to._2)) {
       checkDiagonalObstruction(from._1, from._2, to._1, to._2)
@@ -222,7 +95,6 @@ def chessController(currState: (Array[Array[String]], Boolean) , input: String):
       checkVerticalObstruction(from._1, from._2, to._1, to._2)
     }else false
   }
-
   def rockCanMove(from:(Int,Int), to:(Int,Int)): Boolean = {
     if (from._1 == to._1) {
       checkHorizontalObstruction(from._1, from._2, to._1, to._2)
@@ -230,13 +102,11 @@ def chessController(currState: (Array[Array[String]], Boolean) , input: String):
       checkVerticalObstruction(from._1, from._2, to._1, to._2)
     } else false
   }
-
   def bishopCanMove(from:(Int,Int), to:(Int,Int)): Boolean = {
     if (Math.abs(from._1 - to._1) == Math.abs(from._2 - to._2)) {
       checkDiagonalObstruction(from._1, from._2, to._1, to._2)
     }else false
   }
-
   def canMove(from:(Int,Int), to:(Int,Int)): Boolean ={
     val piece = currState._1(from._1)(from._2)(1)
     piece match{
@@ -250,8 +120,8 @@ def chessController(currState: (Array[Array[String]], Boolean) , input: String):
   }
 
   if(inputArr.length == 2) {
-    val from = rephrase(inputArr(0))
-    val to = rephrase(inputArr(1))
+    val from = rephrase_8x8(inputArr(0))
+    val to = rephrase_8x8(inputArr(1))
     (from, to) match {
       case ((-1, _), (_, _)) => (false, currState._1)
       case ((_, -1), (_, _)) => (false, currState._1)
@@ -259,10 +129,11 @@ def chessController(currState: (Array[Array[String]], Boolean) , input: String):
       case ((_, _), (_, -1)) => (false, currState._1)
       case _ =>
         if (from._1 < 0 || from._1 >= 8 || from._2 < 0 || from._2 >= 8
-          || to._1 < 0 || to._1 >= 8 || to._2 < 0 || to._2 >= 8) {
-          return (false, currState._1)
-        }
-        if(currState._1(from._1)(from._2) == "" || currState._1(from._1)(from._2)(0).toInt-48 != playerTurn || (currState._1(to._1)(to._2) != "" &&  currState._1(to._1)(to._2)(0).toInt == playerTurn) ){
+          || to._1 < 0 || to._1 >= 8 || to._2 < 0 || to._2 >= 8) return (false, currState._1)
+
+        if(currState._1(from._1)(from._2) == ""
+          || currState._1(from._1)(from._2)(0).toInt-48 != playerTurn
+          || (currState._1(to._1)(to._2) != "" &&  currState._1(to._1)(to._2)(0).toInt == playerTurn)){
           (false, currState._1)
         }else{
           if(!canMove(from, to)) {
