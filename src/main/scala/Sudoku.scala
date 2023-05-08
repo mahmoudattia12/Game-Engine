@@ -23,7 +23,7 @@ def sudokuDrawer(currState: Array[Array[String]]): Unit = {
       setVerticalAlignment(SwingConstants.CENTER)
 
       setBorder(BorderFactory.createLineBorder(Color.black))
-      setBackground(Color.white)
+//      setBackground(Color.white)
 //      if(currState(row)(col) != null)
       if(currState(row)(col) != null && currState(row)(col)(0) == '0'){
         setText(currState(row)(col)(1).toString)
@@ -39,7 +39,7 @@ def sudokuDrawer(currState: Array[Array[String]]): Unit = {
 
   def createBoxPanel(dx: Int, dy: Int): JPanel = {
     new JPanel(new GridLayout(3, 3)) {
-      setBorder(BorderFactory.createLineBorder(Color.BLACK, 1))
+      setBorder(BorderFactory.createLineBorder(Color.BLACK, 2))
       for {
         row <- dx * 3 until dx * 3 + 3
         col <- dy * 3 until dy * 3 + 3
@@ -49,10 +49,39 @@ def sudokuDrawer(currState: Array[Array[String]]): Unit = {
     }
   }
 
+  def createRowPanelReference(): JPanel = {
+    val rowPanel = new JPanel(new GridLayout(9, 1)) {
+      setPreferredSize(new Dimension(40, 300))
+      setBackground(new Color(168, 76, 162))
+    }
+    for (row <- 1 to 9) {
+      val label = createLabel((10 - row).toString)
+      label.setForeground(new Color(239, 196, 67))
+      label.setBackground(new Color(168, 76, 162))
+      label.setHorizontalAlignment(SwingConstants.CENTER)
+      rowPanel.add(label)
+    }
+    rowPanel
+  }
+
+  def createColPanelReference(): JPanel = {
+    val colPanel = new JPanel(new GridLayout(1, 10)) {
+      setPreferredSize(new Dimension(400, 50))
+      setBackground(new Color(168, 76, 162))
+    }
+    for (col <- Array(" ", " a", " b", " c", " d", " e", " f", " g", " h", " i")) {
+      val label = createLabel(col)
+      label.setBackground(new Color(168, 76, 162))
+      label.setForeground(new Color(239, 196, 67))
+      label.setVerticalAlignment(SwingConstants.NORTH)
+      label.setHorizontalAlignment(SwingConstants.CENTER)
+      colPanel.add(label)
+    }
+    colPanel
+  }
   def createGamePanel(currState: Array[Array[String]]): JPanel = {
-    new JPanel(new GridLayout(3, 3)) {
-      setBorder(BorderFactory.createLineBorder(Color.BLACK, 3))
-      setBounds(600, 150, 300, 300)
+    val gamePanel = new JPanel(new GridLayout(3, 3)) {
+      setBorder(BorderFactory.createLineBorder(Color.BLACK, 4))
       for {
         row <- 0 until 3
         col <- 0 until 3
@@ -60,28 +89,66 @@ def sudokuDrawer(currState: Array[Array[String]]): Unit = {
         add(createBoxPanel(row, col))
       }
     }
+    val collectingPanel = new JPanel(new BorderLayout()) {
+      add(createRowPanelReference(), BorderLayout.WEST)
+      add(gamePanel, BorderLayout.CENTER)
+      add(createColPanelReference(), BorderLayout.SOUTH)
+      setBounds(525, 130, 400, 400)
+    }
+    collectingPanel
   }
 
   def createMainFrame(welcomeLabel: JLabel, buttonPanel: JPanel) = {
     val mainPanel = new JPanel(new BorderLayout()) {
-      setBackground(new Color(238, 162, 226))
-      welcomeLabel.setBounds(600, 20, 300, 30)
-      buttonPanel.setBounds(600, 150, 300, 300)
+      setBackground(new Color(168, 76, 162))
       add(welcomeLabel, BorderLayout.NORTH)
       add(buttonPanel, BorderLayout.CENTER)
       setLayout(null)
     }
     new JFrame("Sudoku") {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+      setLocation(-10,0)
       setPreferredSize(new Dimension(Integer.MAX_VALUE, 600))
       add(mainPanel)
       pack()
       setVisible(true)
+      setAlwaysOnTop(true)
     }
   }
 
-  createMainFrame(createLabel("Welcome to Sudoku!"), createGamePanel(currState))
+  def updateFrame(welcomeLabel: JLabel, buttonPanel: JPanel) = {
+    val mainPanel = new JPanel(new BorderLayout()) {
+      setBackground(new Color(168, 76, 162))
+      add(welcomeLabel, BorderLayout.NORTH)
+      add(buttonPanel, BorderLayout.CENTER)
+      setLayout(null)
+    }
+    val f = getMainFrame("Sudoku")
+    f.add(mainPanel)
+    f.pack()
+    f.setVisible(true)
+  }
+
+  def getMainFrame(title: String): JFrame = {
+    val windows: Array[Window] = Window.getWindows
+    var frame: JFrame = null
+    for (w <- windows) {
+      w match {
+        case f: javax.swing.JFrame if f.getTitle == title => frame = f
+        case _ =>
+      }
+    }
+    if (frame != null) frame.getContentPane.removeAll()
+    frame
+  }
+  if (getMainFrame("Sudoku") == null) {
+    createMainFrame(createLabel("Welcome to Sudoku!"), createGamePanel(currState))
+  }
+  else {
+    updateFrame(createLabel("Welcome to Sudoku!"), createGamePanel(currState))
+  }
 }
+
 
 
 def sudokuController(currState: (Array[Array[String]], Boolean), input: String): (Boolean, Array[Array[String]]) = {
@@ -90,8 +157,8 @@ def sudokuController(currState: (Array[Array[String]], Boolean), input: String):
     str.split("\\s+")
   }
   val inputArr = splitString(input)
-//  val cellInput = inputArr(0)
-//  val value = inputArr(1)
+  //  val cellInput = inputArr(0)
+  //  val value = inputArr(1)
   def getCol(c: Char): Int = {
     c match {
       case 'a' => 0
@@ -123,7 +190,8 @@ def sudokuController(currState: (Array[Array[String]], Boolean), input: String):
   def validateBlock(x: Int, y: Int, cell: String): Boolean = {
     (x until x + 3).flatMap { row =>
       (y until y + 3).map { col =>
-        if (currState._1(row)(col) == inputArr(1)) return false
+        if ((currState._1(row)(col)!=null && currState._1(row)(col).length == 2 && currState._1(row)(col)(1).toString == inputArr(1))
+          || (currState._1(row)(col) == inputArr(1))) return false
       }
     }
     true
@@ -131,14 +199,16 @@ def sudokuController(currState: (Array[Array[String]], Boolean), input: String):
 
   def validateRow(index: (Int, Int), cell: String): Boolean = {
     LazyList.from(0).takeWhile { case (j) => j <= 8 }.foreach { case (j) =>
-      if (currState._1(index._1)(j) == inputArr(1)) return false
+      if ((currState._1(index._1)(j)!=null && currState._1(index._1)(j).length == 2 && currState._1(index._1)(j)(1).toString == inputArr(1))
+        || (currState._1(index._1)(j) == inputArr(1))) return false
     }
     true
   }
 
   def validateCol(index: (Int, Int), cell: String): Boolean = {
     LazyList.from(0).takeWhile { case (i) => i <= 8 }.foreach { case (i) =>
-      if (currState._1(i)(index._2) == inputArr(1)) return false
+      if ((currState._1(i)(index._2) != null && currState._1(i)(index._2).length == 2 &&currState._1(i)(index._2)(1).toString == inputArr(1))
+        || ( currState._1(i)(index._2) == inputArr(1))  ) return false
     }
     true
   }

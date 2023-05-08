@@ -33,8 +33,39 @@ def eightQueensDrawer(currState: Array[Array[String]]): Unit = {
     (isEven(x) && isEven(y)) || (!isEven(x) && !isEven(y))
   }
 
+  def createRowPanelReference(): JPanel = {
+    val rowPanel = new JPanel(new GridLayout(8, 1)) {
+      setPreferredSize(new Dimension(40, 300))
+      setBackground(new Color(168, 76, 162))
+    }
+    for (row <- 1 to 8) {
+      val label = createLabel((9 - row).toString)
+      label.setForeground(new Color(239, 196, 67))
+      label.setBackground(new Color(168, 76, 162))
+      label.setHorizontalAlignment(SwingConstants.CENTER)
+      rowPanel.add(label)
+    }
+    rowPanel
+  }
+
+  def createColPanelReference(): JPanel = {
+    val colPanel = new JPanel(new GridLayout(1, 9)) {
+      setPreferredSize(new Dimension(400, 50))
+      setBackground(new Color(168, 76, 162))
+    }
+    for (col <- Array(" ", "a ", "b", "c", "d", "e", "f", "g", "h")) {
+      val label = createLabel(col)
+      label.setBackground(new Color(168, 76, 162))
+      label.setForeground(new Color(239, 196, 67))
+      label.setVerticalAlignment(SwingConstants.NORTH)
+      label.setHorizontalAlignment(SwingConstants.CENTER)
+      colPanel.add(label)
+    }
+    colPanel
+  }
+
   def createGamePanel(): JPanel = {
-    new JPanel(new GridLayout(8, 8)) {
+    val gamePanel = new JPanel(new GridLayout(8, 8)) {
       for {
         row <- 0 until 8
         col <- 0 until 8
@@ -47,29 +78,66 @@ def eightQueensDrawer(currState: Array[Array[String]]): Unit = {
         }
       }
       setBorder(BorderFactory.createLineBorder(Color.BLACK, 3))
-      setBounds(550, 100, 400, 400)
     }
+    val collectingPanel = new JPanel(new BorderLayout()) {
+      add(createRowPanelReference(), BorderLayout.WEST)
+      add(gamePanel, BorderLayout.CENTER)
+      add(createColPanelReference(), BorderLayout.SOUTH)
+      setBounds(530, 100, 400, 400)
+    }
+    collectingPanel
   }
 
   def createMainFrame(welcomeLabel: JLabel, buttonPanel: JPanel) = {
     val mainPanel = new JPanel(new BorderLayout()) {
-      setBackground(new Color(238, 162, 226))
-      welcomeLabel.setBounds(600, 20, 300, 30)
-      buttonPanel.setBounds(550, 100, 400, 400)
+      setBackground(new Color(168, 76, 162))
       add(welcomeLabel, BorderLayout.NORTH)
       add(buttonPanel, BorderLayout.CENTER)
       setLayout(null)
     }
     new JFrame("8 Queens") {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+      setLocation(-10,0)
       setPreferredSize(new Dimension(Integer.MAX_VALUE, 600))
       add(mainPanel)
       pack()
       setVisible(true)
+      setAlwaysOnTop(true)
     }
   }
 
-  createMainFrame(createLabel("Welcome to 8 Queens!"), createGamePanel())
+  def updateFrame(welcomeLabel: JLabel, buttonPanel: JPanel) = {
+    val mainPanel = new JPanel(new BorderLayout()) {
+      setBackground(new Color(168, 76, 162))
+      add(welcomeLabel, BorderLayout.NORTH)
+      add(buttonPanel, BorderLayout.CENTER)
+      setLayout(null)
+    }
+    val f = getMainFrame("8 Queens")
+    f.add(mainPanel)
+    f.pack()
+    f.setVisible(true)
+  }
+
+  def getMainFrame(title: String): JFrame = {
+    val windows: Array[Window] = Window.getWindows
+    var frame: JFrame = null
+    for (w <- windows) {
+      w match {
+        case f: javax.swing.JFrame if f.getTitle == title => frame = f
+        case _ =>
+      }
+    }
+    if (frame != null) frame.getContentPane.removeAll()
+    frame
+  }
+
+  if (getMainFrame("8 Queens") == null) {
+    createMainFrame(createLabel("Welcome to 8 Queens!"), createGamePanel())
+  }
+  else {
+    updateFrame(createLabel("Welcome to 8 Queens!"), createGamePanel())
+  }
 }
 def eightQueensController(currState: (Array[Array[String]], Boolean), input: String): (Boolean, Array[Array[String]]) = {
   def splitString(str: String): Array[String] = {

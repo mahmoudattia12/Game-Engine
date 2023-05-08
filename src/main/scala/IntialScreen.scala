@@ -1,11 +1,11 @@
 import scala.util.control.Breaks.{break, breakable}
-
+import javax.swing._
+import java.awt._
 def initialCheckersGrid(): Array[Array[String]] = {
   val isSame = (x: Int, y: Int) => {
     val isEven = (a: Int) => a % 2 == 0
     (isEven(x) && isEven(y)) || (!isEven(x) && !isEven(y))
   }
-  //🔴//🔵//🔴
   val temp: Array[Array[String]] = Array.ofDim[String](8, 8)
   (0 to 2).flatMap { row =>
     (0 to 7).map { col =>
