@@ -34,7 +34,7 @@ def sudokuDrawer(currState: Array[Array[String]]): Unit = {
       setBorder(BorderFactory.createLineBorder(Color.BLACK, 4))
       (0 until 3).flatMap { row =>
         (0 until 3).map { col =>
-          add(createCellLabel(row, col))
+          add(createBoxPanel(row, col))
         }
       }
     }

@@ -115,40 +115,34 @@ def checkersController(currState: (Array[Array[String]], Boolean), input: String
   def jmpRecursively(i: Int, j: Int, turn: Int): Unit = {
     if (!isWithin((i, j))) return
     val check = checkForJmp(i, j, turn)
-    println("check from recur : " + check)
     if(turn == 1){
       check match {
         case "right jmp" =>
-          println("right jump")
           currState._1(i)(j) = null
           currState._1(i + 1)(j + 1) = null
           currState._1(i + 2)(j + 2) = "1"
           jmpRecursively(i + 2, j + 2, turn)
         case "left jmp" =>
-          println("left jump")
           currState._1(i)(j) = null
           currState._1(i + 1)(j - 1) = null
           currState._1(i + 2)(j - 2) = "1"
           jmpRecursively(i + 2, j - 2, turn)
         case _ =>
-          println("ff")
       }
     }else{
       check match {
         case "right jmp" =>
-          println("right jump")
           currState._1(i)(j) = null
           currState._1(i - 1)(j + 1) = null
           currState._1(i - 2)(j + 2) = "2"
           jmpRecursively(i - 2, j + 2, turn)
         case "left jmp" =>
-          println("left jump")
           currState._1(i)(j) = null
           currState._1(i - 1)(j - 1) = null
           currState._1(i - 2)(j - 2) = "2"
           jmpRecursively(i - 2, j - 2, turn)
         case _ =>
-          println("ff")
+
     }
     }
   }
@@ -170,10 +164,10 @@ def checkersController(currState: (Array[Array[String]], Boolean), input: String
         }else if(moveStatus == "check for jmp"){
           val check = if (currState._2) checkForJmp(from._1, from._2, 1) else checkForJmp(from._1, from._2, 2)
           if(check == null) return (false,currState._1)
-          
+
           if(currState._2) jmpRecursively(from._1, from._2, 1)
           else  jmpRecursively(from._1, from._2, 2)
-          
+
           (true, currState._1)
         }else{
           currState._1(from._1)(from._2) =  null

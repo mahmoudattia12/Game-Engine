@@ -1,10 +1,13 @@
 import java.awt.*
+import java.awt.font.{FontRenderContext, TextAttribute}
+import java.text.AttributedString
 import javax.swing.*
 import scala.annotation.tailrec
+import scala.language.postfixOps
 
 def chessDrawer(currState: Array[Array[String]]): Unit = {
   def createCellLabel(colorB: Color, colorF: Color, row: Int, col: Int): JLabel = {
-    new JLabel() {
+  new JLabel() {
       setFont(new Font("Noto Color Emoji", Font.PLAIN, 40))
       setHorizontalAlignment(SwingConstants.CENTER)
       setVerticalAlignment(SwingConstants.CENTER)
@@ -18,11 +21,11 @@ def chessDrawer(currState: Array[Array[String]]): Unit = {
     val gamePanel = new JPanel(new GridLayout(8, 8)) {
       (0 until 8).flatMap { row =>
         (0 until 8).map { col =>
-          val foreColor: Color = if (currState(row)(col) != "" && currState(row)(col)(0) == '2') Color.black else new Color(221, 224, 226)
+          val foreColor: Color = if (currState(row)(col) != "" && currState(row)(col)(0) == '2') Color.black else new Color(255, 255, 255)
           if (isSame(row, col)) {
-            add(createCellLabel(new Color(225, 210, 156), foreColor, row, col))
+            add(createCellLabel(new Color (234, 184, 130), foreColor, row, col))
           } else {
-            add(createCellLabel(new Color(119, 149, 86), foreColor, row, col))
+            add(createCellLabel(new Color(173, 96, 14), foreColor, row, col))
           }
         }
       }
@@ -107,6 +110,7 @@ def chessController(currState: (Array[Array[String]], Boolean) , input: String):
       checkDiagonalObstruction(from._1, from._2, to._1, to._2)
     }else false
   }
+
   def canMove(from:(Int,Int), to:(Int,Int)): Boolean ={
     val piece = currState._1(from._1)(from._2)(1)
     piece match{
@@ -132,8 +136,8 @@ def chessController(currState: (Array[Array[String]], Boolean) , input: String):
           || to._1 < 0 || to._1 >= 8 || to._2 < 0 || to._2 >= 8) return (false, currState._1)
 
         if(currState._1(from._1)(from._2) == ""
-          || currState._1(from._1)(from._2)(0).toInt-48 != playerTurn
-          || (currState._1(to._1)(to._2) != "" &&  currState._1(to._1)(to._2)(0).toInt == playerTurn)){
+          || currState._1(from._1)(from._2)(0) - '0' != playerTurn
+          || (currState._1(to._1)(to._2) != "" &&  currState._1(to._1)(to._2)(0) - '0' == playerTurn)){
           (false, currState._1)
         }else{
           if(!canMove(from, to)) {
