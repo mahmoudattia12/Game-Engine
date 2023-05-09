@@ -16,7 +16,7 @@ def initialCheckersGrid(): Array[Array[String]] = {
   temp
 }
 
-def start() = {
+def initialScreen() = {
   val isBetweenOneAndSix = (str: String) => str.length == 1 && str.charAt(0).isDigit && str.charAt(0) >= '1' && str.charAt(0) <= '6'
   println("\t\t\t\t\t\t\t\t\t\t\tWelcome to Our Game Engine\n")
   println("1- Checkers\t\t2- Chess\t\t3- Tic-Tac-Toe\t\t4- Connect 4\t\t5- Sudoku\t\t6- Eight Queens")

@@ -3,6 +3,6 @@ import java.awt._
 
 object Main {
   def main(args: Array[String]): Unit = {
-    start()
+    initialScreen()
   }
 }
