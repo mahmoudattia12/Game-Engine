@@ -107,18 +107,15 @@ def eightQueensController(currState: (Array[Array[String]], Boolean), input: Str
   if(inputArr(0) == "remove"){
     val cell = rephrase_8x8(inputArr(1))
     cell match {
-      case (_, -1) => (false, currState._1)
-      case (-1, _) => (false, currState._1)
+      case (_, -1) | (-1, _) => (false, currState._1)
       case _ =>
         (removeCell(cell), currState._1)
     }
   }else{
     val cell = rephrase_8x8(input)
     cell match {
-      case (_, -1) => (false, currState._1)
-      case (-1, _) => (false, currState._1)
-      case _ =>
-        (setCell(cell), currState._1)
+      case (_, -1) | (-1, _) => (false, currState._1)
+      case _ => (setCell(cell), currState._1)
     }
   }
 

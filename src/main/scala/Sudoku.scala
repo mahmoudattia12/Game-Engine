@@ -126,7 +126,7 @@ def sudokuController(currState: (Array[Array[String]], Boolean), input: String):
     if (inputArr(0) == "remove") {
       val cell = rephrase(inputArr(1))
       cell match {
-        case (-1, -1) => (false, currState._1)
+        case (-1, _) | (_, -1) => (false, currState._1)
         case _ =>
           (removeCell(cell), currState._1)
       }
@@ -135,8 +135,7 @@ def sudokuController(currState: (Array[Array[String]], Boolean), input: String):
       if (isBetweenOneAndNine(inputArr(1))) {
         val cell = rephrase(inputArr(0))
         cell match {
-          case (-1, _) => (false, currState._1)
-          case (_, -1) => (false, currState._1)
+          case (-1, _) | (_, -1) => (false, currState._1)
           case _ =>
             (setCell(cell, inputArr(1)), currState._1)
         }

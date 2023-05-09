@@ -114,7 +114,8 @@ def getMainFrame(title: String): JFrame = {
   var frame: JFrame = null
   for (w <- windows) {
     w match {
-      case f: javax.swing.JFrame if f.getTitle == title => frame = f
+      case f: javax.swing.JFrame if f.getTitle == title =>
+        frame = f
       case _ =>
     }
   }

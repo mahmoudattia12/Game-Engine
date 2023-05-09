@@ -127,10 +127,7 @@ def chessController(currState: (Array[Array[String]], Boolean) , input: String):
     val from = rephrase_8x8(inputArr(0))
     val to = rephrase_8x8(inputArr(1))
     (from, to) match {
-      case ((-1, _), (_, _)) => (false, currState._1)
-      case ((_, -1), (_, _)) => (false, currState._1)
-      case ((_, _), (-1, _)) => (false, currState._1)
-      case ((_, _), (_, -1)) => (false, currState._1)
+      case ((-1, _), (_, _)) | ((_, -1), (_, _)) | ((_, _), (-1, _)) | ((_, _), (_, -1)) => (false, currState._1)  
       case _ =>
         if (from._1 < 0 || from._1 >= 8 || from._2 < 0 || from._2 >= 8
           || to._1 < 0 || to._1 >= 8 || to._2 < 0 || to._2 >= 8) return (false, currState._1)

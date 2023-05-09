@@ -151,10 +151,7 @@ def checkersController(currState: (Array[Array[String]], Boolean), input: String
     val from = rephrase_8x8(inputArr(0))
     val to = rephrase_8x8(inputArr(1))
     (from, to) match {
-      case ((-1, _),(_,_)) => (false, currState._1)
-      case ((_, -1),(_,_)) => (false, currState._1)
-      case ((_, _),(-1,_)) => (false, currState._1)
-      case ((_, _),(_,-1)) => (false, currState._1)
+      case ((-1, _),(_,_)) | ((_, -1),(_,_)) | ((_, _),(-1,_)) | ((_, _),(_,-1)) => (false, currState._1)
       case _ =>
         //get move status
         val moveStatus: String = if (currState._2) validate(1, from._1, from._2, to._1, to._2)
