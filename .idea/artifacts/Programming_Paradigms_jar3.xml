@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Programming-Paradigms:jar3">
+    <output-path>$PROJECT_DIR$/out/artifacts/Programming_Paradigms_jar3</output-path>
+    <root id="archive" name="Programming-Paradigms.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/scala/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Programming-Paradigms-build" />
+      <element id="module-output" name="Programming-Paradigms" />
+      <element id="extracted-dir" path="$USER_HOME$/AppData/Local/Coursier/cache/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.10/scala-library-2.13.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/AppData/Local/Coursier/cache/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.2.2/scala3-library_3-3.2.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
