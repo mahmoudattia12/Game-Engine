@@ -1,10 +1,3 @@
-import org.jpl7.{Compound, Query}
-
-import collection.JavaConverters.*
-import javax.swing.*
-import java.awt.*
-import java.awt.event.{ActionEvent, ActionListener}
-
 def gameEngine(controller: ((Array[Array[String]], Boolean), String) => (Boolean, Array[Array[String]])
                , drawer: (Array[Array[String]]) => (Unit), grid : Array[Array[String]]) = {
   var gameGrid: Array[Array[String]] = grid

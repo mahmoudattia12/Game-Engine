@@ -5,8 +5,6 @@ import java.awt.*
 import java.awt.event.{ActionEvent, ActionListener}
 
 // Create an ActionListener for the button
-
-
 def sudokuDrawer(currState: Array[Array[String]]): Unit = {
   def createCellLabel(row: Int, col: Int): JLabel = {
     new JLabel(currState(row)(col)) {
@@ -239,7 +237,7 @@ def sudokuController(currState: (Array[Array[String]], Boolean), input: String):
     if(inputArr(0) == "solve"){
       if(prologSolve()) (true, currState._1)
       else {
-        println("there is no solution")
+        println("there is no solution\n")
         (false, currState._1)
       }
     }else (false, currState._1)
