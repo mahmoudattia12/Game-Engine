@@ -1,5 +1,11 @@
-import javax.swing._
-import java.awt._
+import org.jpl7.{Compound, Query}
+import collection.JavaConverters.*
+import javax.swing.*
+import java.awt.*
+import java.awt.event.{ActionEvent, ActionListener}
+
+// Create an ActionListener for the button
+
 
 def sudokuDrawer(currState: Array[Array[String]]): Unit = {
   def createCellLabel(row: Int, col: Int): JLabel = {
@@ -18,6 +24,26 @@ def sudokuDrawer(currState: Array[Array[String]]): Unit = {
       }
       setOpaque(true)
     }
+  }
+  def makeString(currState: Array[Array[String]]): String={
+    var s : String = "Rows = ["
+    for (row <- 0 until currState.length) {
+      s =  s + "["
+      for (col <- 0 until currState(0).length) {
+        currState(row)(col) match{
+          case null => s += "_"
+          case _ =>
+            if(currState(row)(col)(0) == '0') s += currState(row)(col)(1)
+            else s += currState(row)(col)
+        }
+        if(col != currState(0).length -1) s+= ","
+        else s+= "]"
+      }
+      if(row != currState.length-1) s+=","
+      else s+= "]"
+    }
+    s += ", sudoku(Rows), maplist(label, Rows)."
+    s
   }
   def createBoxPanel(dx: Int, dy: Int): JPanel = {
     new JPanel(new GridLayout(3, 3)) {
@@ -46,6 +72,8 @@ def sudokuDrawer(currState: Array[Array[String]]): Unit = {
     }
     collectingPanel
   }
+
+
   if (getMainFrame("Sudoku") == null) {
     createMainFrame(createLabel("Welcome to Sudoku!"), createGamePanel(), "Sudoku")
   }
@@ -56,6 +84,72 @@ def sudokuDrawer(currState: Array[Array[String]]): Unit = {
 
 def sudokuController(currState: (Array[Array[String]], Boolean), input: String): (Boolean, Array[Array[String]]) = {
   val inputArr = splitString(input)
+  //function used in prolog solver
+  def makeString(currState: Array[Array[String]]): String = {
+    var s: String = "Rows = ["
+    for (row <- 0 until currState.length) {
+      s = s + "["
+      for (col <- 0 until currState(0).length) {
+        currState(row)(col) match {
+          case null => s += "_"
+          case _ =>
+            if (currState(row)(col)(0) == '0') s += currState(row)(col)(1)
+            else s += currState(row)(col)
+        }
+        if (col != currState(0).length - 1) s += ","
+        else s += "]"
+      }
+      if (row != currState.length - 1) s += ","
+      else s += "]"
+    }
+    s += ", sudoku(Rows), maplist(label, Rows)."
+    s
+  }
+  //solve the sudoku curr grid
+  def prologSolve():Boolean = {
+    // Action to be performed when the button is clicked
+    val consultQuery = new Query("consult('D:/CSED/level2/2nd semester/programming paradigms/project/Phase-1/Game-Engine/src/main/scala/SudokuSolver.pl')")
+    println()
+    if (consultQuery.hasSolution) {
+      println("Prolog file consulted successfully")
+    } else {
+      println("Failed to consult Prolog file")
+    }
+    val prologCode = makeString(currState._1)
+    val query = new Query(prologCode)
+    if (query.hasSolution) {
+      val solution = query.oneSolution()
+      val rowsTerm = solution.get("Rows")
+      if (rowsTerm.isList()) {
+        // Some org.jpl7.Term object representing a list of lists
+        val outerList = rowsTerm.asInstanceOf[Compound].toTermArray
+        // Get the number of rows and columns
+        val rows = outerList.length
+        val cols = outerList.head.asInstanceOf[Compound].toTermArray.length
+        // Create a 2D array
+        val my2DArray = Array.ofDim[Int](rows, cols)
+        // Iterate over the outer list and extract inner lists
+        for (row <- 0 until rows) {
+          val innerList = outerList(row).asInstanceOf[Compound].toTermArray
+          // Iterate over the inner list and extract values
+          for (col <- 0 until cols) {
+            val value = innerList(col).intValue() // Adjust the conversion based on the Term's content type
+            my2DArray(row)(col) = value
+          }
+        }
+        for (row <- 0 until currState._1.length) {
+          for (col <- 0 until currState._1(0).length) {
+            if (currState._1(row)(col) == null) currState._1(row)(col) = my2DArray(row)(col).toString
+          }
+        }
+        true
+      } else {
+        false
+      }
+    } else {
+      false
+    }
+  }
   def getCol(c: Char): Int = {
     c match {
       case 'a' => 0
@@ -141,5 +235,13 @@ def sudokuController(currState: (Array[Array[String]], Boolean), input: String):
         }
       } else (false, currState._1)
     }
-  }else (false, currState._1)
+  }else if(inputArr.length == 1){
+    if(inputArr(0) == "solve"){
+      if(prologSolve()) (true, currState._1)
+      else {
+        println("there is no solution")
+        (false, currState._1)
+      }
+    }else (false, currState._1)
+  } else (false, currState._1)
 }

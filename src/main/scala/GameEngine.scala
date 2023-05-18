@@ -1,3 +1,10 @@
+import org.jpl7.{Compound, Query}
+
+import collection.JavaConverters.*
+import javax.swing.*
+import java.awt.*
+import java.awt.event.{ActionEvent, ActionListener}
+
 def gameEngine(controller: ((Array[Array[String]], Boolean), String) => (Boolean, Array[Array[String]])
                , drawer: (Array[Array[String]]) => (Unit), grid : Array[Array[String]]) = {
   var gameGrid: Array[Array[String]] = grid
@@ -7,7 +14,6 @@ def gameEngine(controller: ((Array[Array[String]], Boolean), String) => (Boolean
   while (true) {
     scala.Predef.print("Enter your input (separated by spaces if multiple): ")
     val input = scala.io.StdIn.readLine();
-
     val res = controller((gameGrid, turn1), input)
     if (res._1) {
       gameGrid = res._2
