@@ -23,26 +23,6 @@ def sudokuDrawer(currState: Array[Array[String]]): Unit = {
       setOpaque(true)
     }
   }
-  def makeString(currState: Array[Array[String]]): String={
-    var s : String = "Rows = ["
-    for (row <- 0 until currState.length) {
-      s =  s + "["
-      for (col <- 0 until currState(0).length) {
-        currState(row)(col) match{
-          case null => s += "_"
-          case _ =>
-            if(currState(row)(col)(0) == '0') s += currState(row)(col)(1)
-            else s += currState(row)(col)
-        }
-        if(col != currState(0).length -1) s+= ","
-        else s+= "]"
-      }
-      if(row != currState.length-1) s+=","
-      else s+= "]"
-    }
-    s += ", sudoku(Rows), maplist(label, Rows)."
-    s
-  }
   def createBoxPanel(dx: Int, dy: Int): JPanel = {
     new JPanel(new GridLayout(3, 3)) {
       setBorder(BorderFactory.createLineBorder(Color.BLACK, 2))
@@ -70,8 +50,6 @@ def sudokuDrawer(currState: Array[Array[String]]): Unit = {
     }
     collectingPanel
   }
-
-
   if (getMainFrame("Sudoku") == null) {
     createMainFrame(createLabel("Welcome to Sudoku!"), createGamePanel(), "Sudoku")
   }
