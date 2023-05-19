@@ -81,10 +81,11 @@ def sudokuController(currState: (Array[Array[String]], Boolean), input: String):
     s += ", sudoku(Rows), maplist(label, Rows)."
     s
   }
+  
   //solve the sudoku curr grid
   def prologSolve():Boolean = {
     // Action to be performed when the button is clicked
-    val consultQuery = new Query("consult('D:/CSED/level2/2nd semester/programming paradigms/project/Phase-1/Game-Engine/src/main/scala/SudokuSolver.pl')")
+    val consultQuery = new Query("consult('C:/Users/Adel/Desktop/6th term/Paradigms/Project/Functional game engine/Game-Engine/src/main/scala/SudokuSolver.pl')")
     println()
     if (consultQuery.hasSolution) {
       println("Prolog file consulted successfully")

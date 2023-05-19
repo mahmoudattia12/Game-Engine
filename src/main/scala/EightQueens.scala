@@ -68,9 +68,8 @@ def eightQueensController(currState: (Array[Array[String]], Boolean), input: Str
     }
     s
   }
-
   def prologSolve(): Boolean = {
-    val consultQuery = new Query("consult('D:/CSED/level2/2nd semester/programming paradigms/project/Phase-1/Game-Engine/src/main/scala/8Queens.pl')")
+    val consultQuery = new Query("consult('C:/Users/Adel/Desktop/6th term/Paradigms/Project/Functional game engine/Game-Engine/src/main/scala/8Queens.pl')")
     if (consultQuery.hasSolution) {
       println("Prolog file consulted successfully")
     } else {
@@ -83,8 +82,6 @@ def eightQueensController(currState: (Array[Array[String]], Boolean), input: Str
       val solution = query.oneSolution()
       val rowsTerm = solution.get("Qs")
       if (rowsTerm.isList()) {
-        println("list")
-        println(rowsTerm)
         // Some org.jpl7.Term object representing a list of lists
         val outerList = rowsTerm.asInstanceOf[Compound].toTermArray
         // Get the number of rows and columns
