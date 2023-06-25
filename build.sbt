@@ -18,3 +18,4 @@ libraryDependencies += "org.apache.spark" %% "spark-sql" % "3.2.1" % "provided"
 
 // https://mvnrepository.com/artifact/org.apache.spark/spark-hive
 libraryDependencies += "org.apache.spark" %% "spark-hive" % "3.2.1" % "provided"
+

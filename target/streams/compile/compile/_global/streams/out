@@ -1,0 +1,46 @@
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- Warning: D:\CSED\level2\2nd semester\programming paradigms\project\Game-Engine\src\main\scala\Connect4.scala:57:10 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m57 |[0m          [33mreturn[0m i - [31m1[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m   |[0m          ^^^^^^^^^^^^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m   |[0mNon local returns are no longer supported; use scala.util.control.NonLocalReturns instead[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- Warning: D:\CSED\level2\2nd semester\programming paradigms\project\Game-Engine\src\main\scala\Connect4.scala:59:10 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m59 |[0m          [33mreturn[0m i - [31m1[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m   |[0m          ^^^^^^^^^^^^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m   |[0mNon local returns are no longer supported; use scala.util.control.NonLocalReturns instead[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- Warning: D:\CSED\level2\2nd semester\programming paradigms\project\Game-Engine\src\main\scala\EightQueens.scala:52:10 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m52 |[0m          [33mreturn[0m [31mfalse[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m   |[0m          ^^^^^^^^^^^^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m   |[0mNon local returns are no longer supported; use scala.util.control.NonLocalReturns instead[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- Warning: D:\CSED\level2\2nd semester\programming paradigms\project\Game-Engine\src\main\scala\EightQueens.scala:62:10 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m62 |[0m          [33mreturn[0m [31mfalse[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m   |[0m          ^^^^^^^^^^^^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m   |[0mNon local returns are no longer supported; use scala.util.control.NonLocalReturns instead[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- Warning: D:\CSED\level2\2nd semester\programming paradigms\project\Game-Engine\src\main\scala\EightQueens.scala:72:10 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m72 |[0m          [33mreturn[0m [31mfalse[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m   |[0m          ^^^^^^^^^^^^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m   |[0mNon local returns are no longer supported; use scala.util.control.NonLocalReturns instead[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- Warning: D:\CSED\level2\2nd semester\programming paradigms\project\Game-Engine\src\main\scala\EightQueens.scala:82:10 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m82 |[0m          [33mreturn[0m [31mfalse[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m   |[0m          ^^^^^^^^^^^^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m   |[0mNon local returns are no longer supported; use scala.util.control.NonLocalReturns instead[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- Warning: D:\CSED\level2\2nd semester\programming paradigms\project\Game-Engine\src\main\scala\EightQueens.scala:89:63 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m89 |[0m      [33mfor[0m (i <- [31m0[0m to [31m7[0m) [33mif[0m (currState._1(i)(index._2) != [31mnull[0m) [33mreturn[0m [31mfalse[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m   |[0m                                                               ^^^^^^^^^^^^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m   |[0mNon local returns are no longer supported; use scala.util.control.NonLocalReturns instead[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- Warning: D:\CSED\level2\2nd semester\programming paradigms\project\Game-Engine\src\main\scala\EightQueens.scala:90:55 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m90 |[0m      [33mfor[0m (e <- currState._1(index._1)) [33mif[0m (e != [31mnull[0m) [33mreturn[0m [31mfalse[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m   |[0m                                                       ^^^^^^^^^^^^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m   |[0mNon local returns are no longer supported; use scala.util.control.NonLocalReturns instead[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- Warning: D:\CSED\level2\2nd semester\programming paradigms\project\Game-Engine\src\main\scala\Sudoku.scala:87:54 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m87 |[0m          || (currState._1(row)(col) == inputArr([31m1[0m))) [33mreturn[0m [31mfalse[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m   |[0m                                                      ^^^^^^^^^^^^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m   |[0mNon local returns are no longer supported; use scala.util.control.NonLocalReturns instead[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- Warning: D:\CSED\level2\2nd semester\programming paradigms\project\Game-Engine\src\main\scala\Sudoku.scala:95:55 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m95 |[0m        || (currState._1(index._1)(j) == inputArr([31m1[0m))) [33mreturn[0m [31mfalse[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m   |[0m                                                       ^^^^^^^^^^^^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m   |[0mNon local returns are no longer supported; use scala.util.control.NonLocalReturns instead[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- Warning: D:\CSED\level2\2nd semester\programming paradigms\project\Game-Engine\src\main\scala\Sudoku.scala:102:58 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m102 |[0m        || ( currState._1(i)(index._2) == inputArr([31m1[0m))  ) [33mreturn[0m [31mfalse[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m                                                          ^^^^^^^^^^^^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mNon local returns are no longer supported; use scala.util.control.NonLocalReturns instead[0m
+[0m[[0m[33mwarn[0m] [0m[0mthere were 3 deprecation warnings; re-run with -deprecation for details[0m
+[0m[[0m[33mwarn[0m] [0m[0m12 warnings found[0m
