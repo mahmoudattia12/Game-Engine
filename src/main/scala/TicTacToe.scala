@@ -12,7 +12,7 @@ def ticTacToeDrawer(currState: (Array[Array[String]], Boolean), winner: String):
       setFont(new Font("Arial", Font.BOLD, 100))
       setHorizontalAlignment(SwingConstants.CENTER)
       setVerticalAlignment(SwingConstants.CENTER)
-      setForeground(if (currState._1(row)(col) == "X") Color.green else new Color(38, 178, 218))
+      setForeground(if (currState._1(row)(col) == "X") Color.green else Color.decode("#9000a6"))
       setText(currState._1(row)(col))
       setBorder(BorderFactory.createLineBorder(Color.yellow))
       setBackground(Color.black)
@@ -23,11 +23,11 @@ def ticTacToeDrawer(currState: (Array[Array[String]], Boolean), winner: String):
           setBackground(new Color(72, 72, 79)) // Change the background color on hover
         }
         override def mouseExited(e: MouseEvent): Unit = {
-          setForeground(if (currState._1(row)(col) == "X") Color.green else new Color(38, 178, 218))
+          setForeground(if (currState._1(row)(col) == "X") Color.green else Color.decode("#9000a6"))
           setBackground(Color.black)
         }
       })
-      if(winner == "none") {
+      if(winner == winnerStatus.noWin) {
         addActionListener(new ActionListener() {
           def actionPerformed(e: ActionEvent): Unit = {
             if (currState._1(row)(col) == null) {
@@ -35,13 +35,16 @@ def ticTacToeDrawer(currState: (Array[Array[String]], Boolean), winner: String):
               // Play audio clip
               val path = "D:/CSED/level2/2nd semester/programming paradigms/project/Phase-1/Game-Engine/audio/".concat(if (currState._2) "goal1.wav" else "goal2.wav")
               generateAudio(path)
-              ticTacToeController(currState, input)
+              val res = ticTacToeController(currState, input)
+              ticTacToeDrawer(res._1, res._2)
             }
           }
         })
       }
     }
   }
+
+  
   def createGamePanel(): JPanel = {
     new JPanel(new GridLayout(3, 3)) {
       setBounds(550, 230, 400, 400)
@@ -54,16 +57,16 @@ def ticTacToeDrawer(currState: (Array[Array[String]], Boolean), winner: String):
     }
   }
 
-  val colors = (Color.green, new Color(38, 178, 218), Color.yellow)
+  val colors = (Color.green, Color.decode("#9000a6"), Color.yellow)
   if(getMainFrame("Tic Tac Toe") == null) {
-    createMainFrame(createLabel("Welcome to Tic Tac Toe!"), createGamePanel(), createGamePanel(), "Tic Tac Toe", true, createTurnLabel(currState._2, winner, colors))
+    createMainFrame(createLabel("Welcome to Tic Tac Toe!"), createButtonsPanelDA("Tic Tac Toe"), createGamePanel(), "Tic Tac Toe", createTurnLabel(currState._2, winner, colors))
   }
   else{
-    updateFrame(createLabel("Welcome to Tic Tac Toe!"), createGamePanel(), createGamePanel(), "Tic Tac Toe", true, createTurnLabel(currState._2, winner, colors))
+    updateFrame(createLabel("Welcome to Tic Tac Toe!"), createButtonsPanelDA("Tic Tac Toe"), createGamePanel(), "Tic Tac Toe", createTurnLabel(currState._2, winner, colors))
   }
 }
 
-def ticTacToeController(currState: (Array[Array[String]], Boolean), input: String): Unit = {
+def ticTacToeController(currState: (Array[Array[String]], Boolean), input: String): ((Array[Array[String]], Boolean), String) = {
 
   def getWinner(index: (Int, Int)): String = {
     def checkRow(row: Int, currPlay: String): Boolean = {
@@ -84,19 +87,19 @@ def ticTacToeController(currState: (Array[Array[String]], Boolean), input: Strin
     if (checkRow(index._1, currPlay) || checkCol(index._2, currPlay)) currPlay
     else {
       index match {
-        case (0, 1) | (1, 0) | (1, 2) | (2, 1) => "none"
+        case (0, 1) | (1, 0) | (1, 2) | (2, 1) => winnerStatus.noWin
         case (0, 0) =>
-          if (currState._1(1)(1) == currPlay && currState._1(2)(2) == currPlay) currPlay else "none"
+          if (currState._1(1)(1) == currPlay && currState._1(2)(2) == currPlay) currPlay else winnerStatus.noWin
         case (0, 2) =>
-          if (currState._1(1)(1) == currPlay && currState._1(2)(0) == currPlay) currPlay else "none"
+          if (currState._1(1)(1) == currPlay && currState._1(2)(0) == currPlay) currPlay else winnerStatus.noWin
         case (2, 0) =>
-          if (currState._1(1)(1) == currPlay && currState._1(0)(2) == currPlay) currPlay else "none"
+          if (currState._1(1)(1) == currPlay && currState._1(0)(2) == currPlay) currPlay else winnerStatus.noWin
         case (2, 2) =>
-          if (currState._1(1)(1) == currPlay && currState._1(0)(0) == currPlay) currPlay else "none"
+          if (currState._1(1)(1) == currPlay && currState._1(0)(0) == currPlay) currPlay else winnerStatus.noWin
         case _ =>
           if (currState._1(0)(2) == currPlay && currState._1(2)(0) == currPlay) currPlay
           else if (currState._1(0)(0) == currPlay && currState._1(2)(2) == currPlay) currPlay
-          else "none"
+          else winnerStatus.noWin
       }
     }
   }
@@ -105,17 +108,17 @@ def ticTacToeController(currState: (Array[Array[String]], Boolean), input: Strin
     if (currState._1(index._1)(index._2) == null) {
       if (currState._2) currState._1(index._1)(index._2) = "X" else currState._1(index._1)(index._2) = "O"
       val winner = getWinner(index)
-      if(winner == "none"){
-        if(isFull(3,3, currState._1)) (true, "full") else (true, winner)
+      if(winner == winnerStatus.noWin){
+        if(isFull(3,3, currState._1)) (true, winnerStatus.full) else (true, winner)
       }else{
         (true, winner)
       }
-    } else (false, "none")
+    } else (false, winnerStatus.noWin)
   }
   val inputArr = splitString(input)
   val index: (Int, Int) = (inputArr(0).toInt, inputArr(1).toInt)
   val res = setCell(index)
-  if (res._1) ticTacToeDrawer((currState._1, !currState._2), res._2) else ticTacToeDrawer(currState, res._2)
+  if (res._1) ((currState._1, !currState._2), res._2) else (currState, res._2)
 }
 
 
