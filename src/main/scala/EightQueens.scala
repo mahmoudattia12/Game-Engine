@@ -1,3 +1,4 @@
+import com.sun.java.accessibility.util.AWTEventMonitor.addActionListener
 import org.jpl7.*
 
 import java.awt.*
@@ -6,6 +7,9 @@ import java.io.File
 import javax.swing.*
 import scala.util.control.Breaks.{break, breakable}
 
+
+//check if remove is clicked
+var isRemove = false
 def eightQueensDrawer(currState: Array[Array[String]], winner: String): Unit = {
   def createCellButton(color: Color, row: Int, col: Int): JButton = {
     new JButton() {
@@ -16,16 +20,12 @@ def eightQueensDrawer(currState: Array[Array[String]], winner: String): Unit = {
       setForeground(Color.black)
       setFocusable(false)
       setOpaque(true)
-      if(currState(row)(col) != null)
-        setText("<html><div style='display: flex; align-items: center; justify-content: center; " +
-          "width: 100%; height: 100%;'>" +
-          currState(row)(col) +
-          "</div></html>")
+      setText(currState(row)(col))
       setMargin(new Insets(0, 0, 0, 0))
 
       addMouseListener(new MouseAdapter() {
         override def mouseEntered(e: MouseEvent): Unit = {
-          if(color == Color.white) setBackground(new Color(240,240,240)) else setBackground(new Color(110, 110, 110)) // Change the background color on hover
+          if (color == Color.white) setBackground(new Color(240, 240, 240)) else setBackground(new Color(110, 110, 110)) // Change the background color on hover
         }
 
         override def mouseExited(e: MouseEvent): Unit = {
@@ -33,75 +33,29 @@ def eightQueensDrawer(currState: Array[Array[String]], winner: String): Unit = {
           setBackground(color)
         }
       })
-      if (winner == "none") {
+      if (winner == winnerStatus.noWin || winner == winnerStatus.noSol) {
         addActionListener(new ActionListener() {
           def actionPerformed(e: ActionEvent): Unit = {
+
+            val input: String = row.toString + " " + col.toString
             if (currState(row)(col) == null) {
-              val input: String = row.toString + " " + col.toString
-              // Play audio clip
-              val path = "D:/CSED/level2/2nd semester/programming paradigms/project/Phase-1/Game-Engine/audio/goal2.wav"
-              generateAudio(path)
-              eightQueensController(currState, input)
+              if (!isRemove) {
+                val res = eightQueensController(currState, input)
+                eightQueensDrawer(res._1, res._2)
+              }
+            } else {
+              if (isRemove) {
+                val res = eightQueensController(currState, "remove " + input)
+                eightQueensDrawer(res._1, res._2)
+              }
             }
+            isRemove = false
           }
         })
       }
     }
   }
 
-  def createOptionButton(text:String): JButton = {
-    new JButton() {
-      setText(text)
-      setFont(new Font("MV Boli", Font.BOLD, 20))
-      setVerticalTextPosition(SwingConstants.CENTER)
-      setHorizontalTextPosition(SwingConstants.CENTER)
-      setVerticalAlignment(SwingConstants.CENTER)
-      setHorizontalAlignment(SwingConstants.CENTER)
-      setOpaque(true)
-      setBackground(Color.decode("#be32f0"))
-      setForeground(Color.black)
-      setFocusable(false)
-      setBorder(BorderFactory.createLineBorder(Color.BLACK, 2))
-
-      //set hover
-      addMouseListener(new MouseAdapter() {
-        override def mouseEntered(e: MouseEvent): Unit = {
-          setBackground(new Color(232, 126, 251))
-        }
-
-        override def mouseExited(e: MouseEvent): Unit = {
-          setBackground(Color.decode("#be32f0"))
-          setForeground(Color.black)
-        }
-      })
-
-      //set action
-      addActionListener(new ActionListener() {
-        def actionPerformed(e: ActionEvent): Unit = {
-          text match{
-            case "Main Menu" =>
-              initialScreen()
-            case "Remove" =>
-            case "Solve" =>
-            case _ =>
-          }
-        }
-      })
-    }
-  }
-  
-  def createButtonsPanel(): JPanel = {
-    val panel = new JPanel(new GridLayout(1, 4, 100, 0)) {
-      setBounds(350, 90, 800, 50)
-      setOpaque(false)
-      add(createOptionButton("Main Menu"))
-      add(createOptionButton("Remove"))
-      add(createOptionButton("Solve"))
-      add(createOptionButton("New Game"))
-    }
-    panel
-  }
-  
   def createGamePanel(): JPanel = {
     new JPanel(new GridLayout(8, 8)) {
       (0 until 8).flatMap { row =>
@@ -119,23 +73,24 @@ def eightQueensDrawer(currState: Array[Array[String]], winner: String): Unit = {
     }
   }
 
-  val colors = (Color.green, new Color(38, 178, 218), Color.yellow)
+//  val colors = (Color.green, new Color(38, 178, 218), Color.yellow)
+  val colors = (Color.decode("#d99218"), Color.decode("#a30844"))
   //edit new turnLabel for single agent
   if (getMainFrame("8 Queens") == null) {
-    createMainFrame(createLabel("Welcome to 8 Queens!"), createButtonsPanel(),createGamePanel(), "8 Queens",true, createTurnLabel(true, winner, colors))
+    createMainFrame(createLabel("Welcome to 8 Queens!"), createButtonsPanelSA("8 Queens", winner, currState), createGamePanel(), "8 Queens", createSingleAgentLabel(winner, colors))
   }
   else {
-    updateFrame(createLabel("Welcome to 8 Queens!"), createButtonsPanel(),createGamePanel(), "8 Queens", true, createTurnLabel(true, winner, colors))
+    updateFrame(createLabel("Welcome to 8 Queens!"), createButtonsPanelSA("8 Queens", winner, currState), createGamePanel(), "8 Queens", createSingleAgentLabel(winner, colors))
   }
 }
-def eightQueensController(currState: Array[Array[String]], input: String) = {
+def eightQueensController(currState: Array[Array[String]], input: String):(Array[Array[String]],String) = {
   val inputArr = splitString(input)
 
   def makeString(state: Array[Array[String]]): String = {
     var s: String = "["
     for (col <- 0 until 8) {
       var flag: Boolean = false
-      breakable{
+      breakable {
         for (row <- 0 until 8) {
           if (state(row)(col) == "♛") {
             s += (8 - row).toString
@@ -242,43 +197,47 @@ def eightQueensController(currState: Array[Array[String]], input: String) = {
   }
 
   //function to validate and set the cell in the currState
-  def setCell(index: (Int, Int)): Boolean = {
+  def setCell(index: (Int, Int)):String = {
     if (isValid(index)) {
+      // Play audio clip
+      val path = "D:/CSED/level2/2nd semester/programming paradigms/project/Phase-1/Game-Engine/audio/goal2.wav"
+      generateAudio(path)
       currState(index._1)(index._2) = "♛";
-      true
-    } else false
+      if(isWinner()) winnerStatus.win else winnerStatus.noWin
+    } else {
+      val path = "D:/CSED/level2/2nd semester/programming paradigms/project/Phase-1/Game-Engine/audio/error.wav"
+      generateAudio(path)
+      winnerStatus.noWin
+    }
   }
 
-  def removeCell(index: (Int, Int)): Boolean = {
+  def removeCell(index: (Int, Int)) = {
     if (currState(index._1)(index._2) == "♛") {
+      val path = "D:/CSED/level2/2nd semester/programming paradigms/project/Phase-1/Game-Engine/audio/remove.wav"
+      generateAudio(path)
       currState(index._1)(index._2) = null;
-      true
-    } else
-      false
+    }
   }
-
+  def isWinner():Boolean = {
+    (0 until 8).flatMap { row =>
+      var queens = 0
+      (0 until 8).map { col =>
+        if(currState(row)(col) == "♛") queens += 1
+        if(queens > 1) return false
+        if(col == 7 && queens != 1) return false
+      }
+    }
+    true
+  }
   if (inputArr(0) == "remove") {
-    val cell = rephrase_8x8(inputArr(1))
-    cell match {
-      case (_, -1) | (-1, _) => (false, currState)
-      case _ =>
-        (removeCell(cell), currState)
-    }
-  } else if(inputArr(0) == "solve"){
-    if (prologSolve()) (true, currState)
-    else {
-      println("there is no solution\n")
-      (false, currState)
-    }
+    val cell = (inputArr(1).toInt, inputArr(2).toInt)
+    removeCell(cell)
+    (currState, winnerStatus.noWin)
+  } else if (inputArr(0) == "solve") {
+    if (prologSolve()) (currState, winnerStatus.solved)
+    else (currState, winnerStatus.noSol)
   } else {
     val cell = (inputArr(0).toInt, inputArr(1).toInt)
-    setCell(cell)
-    eightQueensDrawer(currState, "none")
-
-//    cell match {
-//      case (_, -1) | (-1, _) => (false, currState)
-//      case _ => (setCell(cell), currState)
-//    }
+    (currState, setCell(cell))
   }
-
 }

@@ -2,6 +2,7 @@ import scala.util.control.Breaks.{break, breakable}
 import javax.swing.*
 import java.awt.*
 import java.awt.event.*
+
 def initialCheckersGrid(): Array[Array[String]] = {
   val temp: Array[Array[String]] = Array.ofDim[String](8, 8)
   (0 to 2).flatMap { row =>
@@ -17,7 +18,7 @@ def initialCheckersGrid(): Array[Array[String]] = {
   temp
 }
 
-def createInitButton(text:String, frame:JFrame):JButton = {
+def createInitButton(text: String, frame: JFrame): JButton = {
   val button = new JButton() {
     setText(text)
     setFont(new Font("MV Boli", Font.BOLD, 30))
@@ -45,19 +46,35 @@ def createInitButton(text:String, frame:JFrame):JButton = {
 
     //set action
     addActionListener(new ActionListener() {
+      val path = "D:/CSED/level2/2nd semester/programming paradigms/project/Phase-1/Game-Engine/audio/interface-click-tone-2568.wav"
+      generateAudio(path)
+
       def actionPerformed(e: ActionEvent): Unit = {
         val path = "D:/CSED/level2/2nd semester/programming paradigms/project/Phase-1/Game-Engine/audio/interface-click-tone-2568.wav"
         generateAudio(path)
         text match {
-          case "Checker" =>
+          //o indicates no winner(none)
+          case "Checkers" =>
+            checkersDrawers((initialCheckersGrid(), true), winnerStatus.noWin)
           case "Chess" =>
+            val grid: Array[Array[String]] =
+              Array(Array("2♜", "2♞", "2♝", "2♛", "2♚", "2♝", "2♞", "2♜"),
+                Array("2♟", "2♟", "2♟", "2♟", "2♟", "2♟", "2♟", "2♟"),
+                Array("", "", "", "", "", "", "", ""),
+                Array("", "", "", "", "", "", "", ""),
+                Array("", "", "", "", "", "", "", ""),
+                Array("", "", "", "", "", "", "", ""),
+                Array("1♟", "1♟", "1♟", "1♟", "1♟", "1♟", "1♟", "1♟"),
+                Array("1♜", "1♞", "1♝", "1♛", "1♚", "1♝", "1♞", "1♜"))
+            chessDrawer((grid, true), winnerStatus.noWin)
           case "Tic Tac Toe" =>
-            ticTacToeDrawer((Array.ofDim[String](3, 3), true), "none")
+            ticTacToeDrawer((Array.ofDim[String](3, 3), true), winnerStatus.noWin)
           case "Connect 4" =>
-            connect4Drawer((Array.ofDim[String](6, 7), true), "none")
+            connect4Drawer((Array.ofDim[String](6, 7), true), winnerStatus.noWin)
           case "Sudoku" =>
+            sudokuDrawer(generateInitialSudoku(sudokuLevel.MEDIUM), winnerStatus.noWin)
           case _ =>
-            eightQueensDrawer(Array.ofDim[String](8, 8), "none")
+            eightQueensDrawer(Array.ofDim[String](8, 8), winnerStatus.noWin)
         }
         frame.dispose()
       }
@@ -68,13 +85,13 @@ def createInitButton(text:String, frame:JFrame):JButton = {
 
 def createOptionsPanel(frame: JFrame): JPanel = {
   new JPanel(new GridLayout(6, 1)) {
-    add(createInitButton("Checker", frame))
+    add(createInitButton("Checkers", frame))
     add(createInitButton("Chess", frame))
     add(createInitButton("Tic Tac Toe", frame))
     add(createInitButton("Connect 4", frame))
     add(createInitButton("Sudoku", frame))
     add(createInitButton("8 Queens", frame))
-    setBounds(500, 230, 500, 500)
+    setBounds(500, 170, 500, 500)
     setBorder(BorderFactory.createLineBorder(Color.BLACK, 2))
     setOpaque(true)
     setBackground(Color.black)
@@ -114,45 +131,3 @@ def initialScreen() = {
   frame.setVisible(true)
   frame.setAlwaysOnTop(true)
 }
-
-
-
-
-//  val isBetweenOneAndSix = (str: String) => str.length == 1 && str.charAt(0).isDigit && str.charAt(0) >= '1' && str.charAt(0) <= '6'
-//  println("\t\t\t\t\t\t\t\t\t\t\tWelcome to Our Game Engine\n")
-//  println("1- Checkers\t\t2- Chess\t\t3- Tic-Tac-Toe\t\t4- Connect 4\t\t5- Sudoku\t\t6- Eight Queens")
-//  var gameChoice: String = "1"
-//  breakable {
-//    while (true) {
-//      scala.Predef.print("please enter your choice(1/2/3/4/5/6): ")
-//      gameChoice = scala.io.StdIn.readLine()
-//      if (isBetweenOneAndSix(gameChoice)) break
-//      else {
-//        println("invalid input!!!")
-//      }
-//    }
-//  }
-//  gameChoice match {
-//    case "1" =>
-////      gameEngine(checkersDrawers, initialCheckersGrid())
-//    case "2" =>
-//      val grid: Array[Array[String]] =
-//        Array(Array("2♜", "2♞", "2♝", "2♛", "2♚", "2♝", "2♞", "2♜"),
-//        Array("2♟", "2♟", "2♟", "2♟", "2♟", "2♟", "2♟", "2♟"),
-//        Array("", "", "", "", "", "", "", ""),
-//        Array("", "", "", "", "", "", "", ""),
-//        Array("", "", "", "", "", "", "", ""),
-//        Array("", "", "", "", "", "", "", ""),
-//        Array("1♟", "1♟", "1♟", "1♟", "1♟", "1♟", "1♟", "1♟"),
-//        Array("1♜", "1♞", "1♝", "1♛", "1♚", "1♝", "1♞", "1♜"))
-////      gameEngine(chessDrawer, grid)
-//    case "3" =>
-//      ticTacToeDrawer((Array.ofDim[String](3, 3), true), "none")
-//    case "4" =>
-//      connect4Drawer((Array.ofDim[String](6, 7), true), "none")
-//    case "5" =>
-////      gameEngine(sudokuDrawer, generateInitialSudoku())
-//    case _ =>
-//      eightQueensDrawer(Array.ofDim[String](8, 8), "none")
-////      gameEngine(eightQueensDrawer, Array.ofDim[String](8, 8))
-//  }

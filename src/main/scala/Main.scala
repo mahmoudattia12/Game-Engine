@@ -1,5 +1,6 @@
-import org.jpl7._
-import collection.JavaConverters._
+import org.jpl7.*
+
+import collection.JavaConverters.*
 
 
 object Main {
@@ -8,7 +9,3 @@ object Main {
     initialScreen()
   }
 }
-
-
-
-
