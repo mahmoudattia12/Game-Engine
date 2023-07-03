@@ -1,6 +1,12 @@
 import scala.collection.mutable.Set
 import scala.util.Random
 
+object sudokuLevel extends Enumeration {
+  //easy 30 medium 45 difficult 56
+  val EASY = 30;
+  val MEDIUM = 45;
+  val HARD = 56
+}
 def remove(a: Array[Array[Int]], count: Int):Array[Array[Int]] = {
   val rs = Random.shuffle(List.range(0, 81))
   for (i <- 0 until count)
@@ -15,7 +21,7 @@ def intArrayToStringArray(arr: Array[Array[Int]]): Array[Array[String]] = {
   })
 }
 
-def generateInitialSudoku() : Array[Array[String]] = {
+def generateInitialSudoku(count: Int) : Array[Array[String]] = {
   val a: Array[Array[Int]] = Array.fill(9, 9)(0)
   val r = Array.fill(9)(Set[Int]())
   val c = Array.fill(9)(Set[Int]())
@@ -60,5 +66,7 @@ def generateInitialSudoku() : Array[Array[String]] = {
     else if (y < 8) fill(x, y + 1) else if (x < 8) fill(x + 1, 0) else true
   }
   fill(0, 0)
-  intArrayToStringArray(remove(a, 50))
+  //easy 30 medium 45 difficult 56
+  intArrayToStringArray(remove(a, count))
 }
+
